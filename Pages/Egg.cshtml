@@ -1,0 +1,53 @@
+﻿@page
+@using EggMaker.Models
+@model EggMaker.Pages.EggModel
+@{
+    ViewData["Title"] = "Egg Inventory";
+}
+
+<h1>Egg List 🥚</h1>
+<form method="post" class="card p-3" style="background-color: burlywood;">
+    <div class="row">
+        <div asp-validation-summary="All"></div>
+    </div>
+    <div class="form-group mb-0 align-middle">
+        <label asp-for="NewEgg.Name">Name</label>
+        <input type="text" asp-for="NewEgg.Name" class="mr-5">
+        <label asp-for="NewEgg.Size">Size</label>
+        <select asp-for="NewEgg.Size" asp-items="Html.GetEnumSelectList<EggSize>()" class="mr-5"></select>
+        <label asp-for="NewEgg.Price"></label>
+        <input asp-for="NewEgg.Price" class="mr-5" />
+        <label asp-for="NewEgg.IsOrganic">Organic</label>
+        <input type="checkbox" asp-for="NewEgg.IsOrganic" class="mr-5">
+        <button class="btn btn-primary">Add</button>
+    </div>
+</form>
+<table class="table mt-5">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Size</th>
+            <th scope="col">Organic</th>
+            <th scope="col">Delete</th>
+        </tr>
+    </thead>
+    @foreach (var egg in Model.eggs)
+    {
+        <tr>
+            <td>@egg.Name</td>
+            <td>@($"{egg.Price:C}")</td>
+            <td>@egg.Size</td>
+            <td>@Model.OrganicText(egg)</td>
+            <td>
+                <form method="post" asp-page-handler="Delete" asp-route-id="@egg.Id">
+                    <button class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+    }
+</table>
+
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+}
